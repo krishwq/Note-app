@@ -1,0 +1,103 @@
+.form-check-input:checked {
+  background-color: #031633;
+  border-color: #031633;
+}
+.form-check-input:focus{
+  box-shadow: 0 0 0 .25rem #07204440
+}
+body{
+  background-color: #081f48;
+  color: white;
+}
+.card{
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+@media only screen and (max-width:1000px)  {
+  .col-4{
+      width: 50%;
+  }
+}
+@media only screen and (max-width:768px)  {
+  .col-4{
+      width: 100%;
+  }
+}
+.offcanvas.offcanvas-start{
+  right: 0;
+  transform: translate(100%);
+  left: auto;
+  width: 250px;
+}
+.btnclose{
+  margin: .5rem .5rem .5rem auto;
+}
+
+.nav-item{
+  margin-bottom: 10px;
+}
+ul{
+  list-style-type: none;
+  position: relative;
+}
+.navbar{
+  padding:6px 0px 0px 0px;
+  /* z-index: 7000; */
+}
+@media only screen and (max-width:1000px){
+  .navbar{
+    padding:6px 0px 6px 0px;
+  }
+}
+@media only screen and (max-width:500px)  {
+  .modal{
+      width: 85vw;
+      left:50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+  }
+}
+.intro{
+  width: 40vw;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-60%);
+}
+.intro h1{
+  font-size: 55px;
+}
+@media only screen and (max-width:800px)  {
+
+  .intro{
+      width: 70vw;
+  }
+}
+.row{
+  margin:-25px 0px !important;
+}
+.my-5{
+  margin-top:100px !important ;
+}
+.contact{
+  width: 60%;
+}
+@media only screen and (max-width:1000px){
+  .contact{
+    width: 80%;
+  }
+}
+@media only screen and (max-width:500px){
+.contact{
+  width: 100%;
+}
+}
+@media only screen and (min-width:1000px){
+  .contact-form{
+    margin-left: 90px;
+  }
+}
+.dropdown-menu[data-bs-popper]{
+  right: 2px !important;
+  left: auto;
+}
