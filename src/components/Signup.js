@@ -39,7 +39,7 @@ function Signup() {
     }
    else if (credent.pass === credent.cpass) {
       const response = await fetch(
-        `https://inotebook-app-5.onrender.com/api/auth/createuser`,
+        `https://note-app-3-lfli.onrender.com/api/auth/createuser`,
         {
           method: "POST",
           headers: {

@@ -81,7 +81,7 @@ const Navbar = () => {
   const handledetails = async () => {
     refdetails.current.click();
     const response = await fetch(
-      `https://inotebook-app-5.onrender.com/api/auth/getuser`,
+      `https://note-app-3-lfli.onrender.com/api/auth/getuser`,
       {
         method: "POST",
         headers: {
@@ -111,7 +111,7 @@ const Navbar = () => {
       showalart("Please fill password of atleast 8 character", "warning");
     } else if (user.forgetpass === user.forgetcpass) {
       const response = await fetch(
-        `https://inotebook-app-5.onrender.com/api/auth/changepass`,
+        `https://note-app-3-lfli.onrender.com/api/auth/changepass`,
         {
           method: "PUT",
           headers: {
@@ -144,7 +144,7 @@ const Navbar = () => {
   };
   const handleaccountdelete = async () => {
     refaccountclose.current.click();
-    const response = await fetch(`https://inotebook-app-5.onrender.com/api/auth/deleteuser`, {
+    const response = await fetch(`https://note-app-3-lfli.onrender.com/api/auth/deleteuser`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

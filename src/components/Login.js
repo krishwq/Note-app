@@ -27,7 +27,7 @@ function Login() {
   const handlesubmit = async (e) => {
     e.preventDefault();
     const response = await fetch(
-      `https://inotebook-app-5.onrender.com/api/auth/login`,
+      `https://note-app-3-lfli.onrender.com/api/auth/login`,
       {
         method: "POST",
         headers: {
@@ -57,7 +57,7 @@ function Login() {
       showalart("Please fill password of atleast 8 character", "warning");
     } else if (user.forgetpass === user.forgetcpass) {
       const response = await fetch(
-        `https://inotebook-app-5.onrender.com/api/auth/forgetpass`,
+        `https://note-app-3-lfli.onrender.com/api/auth/forgetpass`,
         {
           method: "PUT",
           headers: {
