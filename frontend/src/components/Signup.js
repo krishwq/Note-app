@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import noteContext from "../context/Notes/noteContext";
 import ReCAPTCHA from "react-google-recaptcha";
+import loader from "./loadingdark.gif";
 
 
 function Signup() {
@@ -234,7 +235,7 @@ let signupcaptcha="";
         </div>
         <ReCAPTCHA ref={(r) => setsignCaptchaRef(r) } sitekey="6LeItSMqAAAAAL73NtPX23w7lMrMCajqNk0CYDL2" onChange={onChangesign} />
         <button type="submit" className={`btn btn-${state.mode==="dark"?"info":"dark"} my-3`}>
-          Register
+          {loader}Register
         </button>
       </form>
       <h6 style={{display:"inline"}}>Already have an account ?</h6>&nbsp;&nbsp;<Link to="/login">Login</Link>
