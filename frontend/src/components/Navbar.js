@@ -3,8 +3,19 @@ import { Link, useLocation } from "react-router-dom";
 import noteContext from "../context/Notes/noteContext";
 import image from "./pngwing.com.png";
 import { useHistory } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const Navbar = () => {
+  let forgetpasscaptcha;
+  let resetpasscaptcha="";
+  const setforgetCaptchaRef = (ref) => {
+    if (ref) {
+      return forgetpasscaptcha= ref;
+    }
+  };
+  function onChangeresetpass(value) {
+    resetpasscaptcha=value;
+  }
   const [details, setdetails] = useState({
     name: "",
     dob: "",
@@ -107,8 +118,14 @@ const Navbar = () => {
       user.forgetcpass === ""
     ) {
       showalart("Please fill all the details", "warning");
+      forgetpasscaptcha.reset();
     } else if (user.forgetpass.length < 8) {
       showalart("Please fill password of atleast 8 character", "warning");
+      forgetpasscaptcha.reset();
+    }
+    else if(resetpasscaptcha===""){
+      showalart("Please Validate the captcha", "warning");
+      forgetpasscaptcha.reset();
     } else if (user.forgetpass === user.forgetcpass) {
       const response = await fetch(
         `https://note-app-3-lfli.onrender.com/api/auth/changepass`,
@@ -127,8 +144,12 @@ const Navbar = () => {
       const json = await response.json();
       if (json.success) {
         showalart("Password Change Successfully", "success");
+        forgetpasscaptcha.reset();
+        resetpasscaptcha="";
       } else {
         showalart("Enter Correct Current Password", "danger");
+        forgetpasscaptcha.reset();
+        resetpasscaptcha="";
       }
       setuser({ currentpass: "", forgetpass: "", forgetcpass: "" });
       refpassclose.current.click();
@@ -137,6 +158,7 @@ const Navbar = () => {
         "Please give the same passord in passord and confirm password",
         "warning"
       );
+      forgetpasscaptcha.reset();
     }
   };
   const onchangeforget = (e) => {
@@ -247,6 +269,7 @@ const Navbar = () => {
                   Confirm Password
                 </label>
               </div>
+              <ReCAPTCHA ref={(r) => setforgetCaptchaRef(r) } sitekey="6LeItSMqAAAAAL73NtPX23w7lMrMCajqNk0CYDL2" onChange={onChangeresetpass} />
             </div>
             <div className="modal-footer">
               <button
@@ -578,7 +601,6 @@ const Navbar = () => {
                     }}
                     data-bs-toggle="dropdown"
                     aria-expanded="false"
-                    // onClick={handledetails}
                   >
                     <i className="fa-solid fa-user"></i>
                   </button>

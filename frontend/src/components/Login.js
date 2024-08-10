@@ -4,6 +4,20 @@ import noteContext from "../context/Notes/noteContext";
 import ReCAPTCHA from "react-google-recaptcha";
 
 function Login() {
+  let logincptcha="";
+  let logcaptcha;
+  let forgetcaptcha;
+  let resetcaptcha="";
+  const setlogCaptchaRef = (ref) => {
+    if (ref) {
+      return logcaptcha= ref;
+    }
+ };
+ const setforCaptchaRef = (ref) => {
+  if (ref) {
+    return forgetcaptcha= ref;
+  }
+};
   const ref = useRef();
   const refclose = useRef();
   const context = useContext(noteContext);
@@ -14,8 +28,11 @@ function Login() {
     forgetpass: "",
     forgetcpass: "",
   });
-  function onChange(value) {
-    console.log("Captcha value:", value);
+  function onChangelogin(value) {
+    logincptcha=value;
+  }
+  function onChangereset(value) {
+    resetcaptcha=value;
   }
   let history = useHistory();
   const showalart = (massage, type) => {
@@ -30,6 +47,13 @@ function Login() {
 
   const handlesubmit = async (e) => {
     e.preventDefault();
+    if(credent.email==="" || credent.pass===""){
+      showalart("Please fill all the details", "warning");
+      logcaptcha.reset();
+    }else if(logincptcha===""){
+      showalart("Please Validate the captcha", "warning");
+      logcaptcha.reset();
+    }else{
     const response = await fetch(
       `https://note-app-3-lfli.onrender.com/api/auth/login`,
       {
@@ -44,10 +68,15 @@ function Login() {
     if (json.success) {
       showalart("Login Successfully", "success");
       localStorage.setItem("token", json.authtoken);
+      logincptcha="";
+    logcaptcha.reset();
       history.push("/");
     } else {
       showalart("Please Login with correct credential", "danger");
+      logincptcha="";
+    logcaptcha.reset();
     }
+  }
   };
   const handleforget = async (e) => {
     e.preventDefault();
@@ -57,9 +86,15 @@ function Login() {
       user.forgetcpass === ""
     ) {
       showalart("Please fill all the details", "warning");
+      forgetcaptcha.reset();
     } else if (user.forgetpass.length < 8) {
       showalart("Please fill password of atleast 8 character", "warning");
-    } else if (user.forgetpass === user.forgetcpass) {
+      forgetcaptcha.reset();
+    }else if(resetcaptcha===""){
+      showalart("Please Validate the captcha", "warning");
+      forgetcaptcha.reset();
+    }
+     else if (user.forgetpass === user.forgetcpass) {
       const response = await fetch(
         `https://note-app-3-lfli.onrender.com/api/auth/forgetpass`,
         {
@@ -76,16 +111,22 @@ function Login() {
       const json = await response.json();
       if (json.success) {
         showalart("Password Reset Successfully", "success");
+        resetcaptcha="";
+      forgetcaptcha.reset();
       } else {
         showalart("Email Not Found", "danger");
+        resetcaptcha="";
+      forgetcaptcha.reset();
       }
       setuser({ forgetemail: "", forgetpass: "", forgetcpass: "" });
+      
       refclose.current.click();
     } else {
       showalart(
         "Please give the same passord in passord and confirm password",
         "warning"
       );
+      forgetcaptcha.reset();
     }
   };
   const resetpass = () => {
@@ -185,6 +226,7 @@ function Login() {
                   Confirm Password
                 </label>
               </div>
+              <ReCAPTCHA ref={(r) => setforCaptchaRef(r) } sitekey="6LeItSMqAAAAAL73NtPX23w7lMrMCajqNk0CYDL2" onChange={onChangereset} />
             </div>
             <div className="modal-footer">
               <button
@@ -242,7 +284,7 @@ function Login() {
               Password
             </label>
           </div>
-          <ReCAPTCHA sitekey="6LcVtSMqAAAAAB35zeC8BoKhUOJlg-6dI3lBzfXI" onChange={onChange} />
+          <ReCAPTCHA ref={(r) => setlogCaptchaRef(r) } sitekey="6LeItSMqAAAAAL73NtPX23w7lMrMCajqNk0CYDL2" onChange={onChangelogin} />
           <button
             type="submit"
             className={`btn btn-${

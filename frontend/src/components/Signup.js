@@ -1,8 +1,20 @@
 import React, { useContext, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import noteContext from "../context/Notes/noteContext";
+import ReCAPTCHA from "react-google-recaptcha";
+
 
 function Signup() {
+  let signcaptcha;
+let signupcaptcha="";
+  const setsignCaptchaRef = (ref) => {
+    if (ref) {
+      return signcaptcha= ref;
+    }
+ };
+ function onChangesign(value) {
+  signupcaptcha=value;
+}
   const context = useContext(noteContext);
   let history=useHistory();
   const { state, setAlart } = context;
@@ -29,13 +41,21 @@ function Signup() {
     e.preventDefault();
     if(credent.name==="" || credent.dob===""||credent.email===""|| credent.gender===""||credent.mobile===""||credent.pass===""||credent.cpass===""){
       showalart("Please fill all the details", "warning");
+      signcaptcha.reset();
     }
     else if(credent.name.length<3){
       showalart("Please enter name of atleast 3 character", "warning");
+      signcaptcha.reset();
     }else if(credent.mobile.length<10){
       showalart("Please enter a valid 10 digit mobile number", "warning");
+      signcaptcha.reset();
     }else if(credent.pass.length<8){
       showalart("Please enter a password of atleast 8 character", "warning");
+      signcaptcha.reset();
+    }
+    else if(signupcaptcha===""){
+      showalart("Please Validate the captcha", "warning");
+      signcaptcha.reset();
     }
    else if (credent.pass === credent.cpass) {
       const response = await fetch(
@@ -65,12 +85,17 @@ function Signup() {
           email: "",
           pass: "",
           cpass: "",})
+          signupcaptcha="";
          history.push("/login")
+         signcaptcha.reset();
       } else {
         showalart("Email already exist", "danger");
+        signcaptcha.reset();
+        signupcaptcha="";
       }
     }else{
       showalart("Please give the same passord in passord and confirm password", "warning");
+      signcaptcha.reset();
     }
   };
   const onchange = (e) => {
@@ -183,6 +208,7 @@ function Signup() {
             Confirm Password
           </label>
         </div>
+        <ReCAPTCHA ref={(r) => setsignCaptchaRef(r) } sitekey="6LeItSMqAAAAAL73NtPX23w7lMrMCajqNk0CYDL2" onChange={onChangesign} />
         <button type="submit" className={`btn btn-${state.mode==="dark"?"info":"dark"} my-3`}>
           Register
         </button>
