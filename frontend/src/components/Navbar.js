@@ -6,6 +6,9 @@ import { useHistory } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 
 const Navbar = () => {
+  const [show6, setshow6] = useState("password");
+  const [show7, setshow7] = useState("password");
+  const [show8, setshow8] = useState("password");
   let forgetpasscaptcha;
   let resetpasscaptcha="";
   const setforgetCaptchaRef = (ref) => {
@@ -228,7 +231,7 @@ const Navbar = () => {
             <div className="modal-body">
               <div className="form-floating mb-3">
                 <input
-                  type="password"
+                  type={show6}
                   className="form-control"
                   id="currentpass"
                   name="currentpass"
@@ -236,6 +239,18 @@ const Navbar = () => {
                   onChange={onchangeforget}
                   value={user.currentpass}
                 />
+                <span
+                  className="hspass"
+                  onClick={() => {
+                    if (show6 === "password") {
+                      setshow6("text");
+                    } else {
+                      setshow6("password");
+                    }
+                  }}
+                >
+                  {show6==="password"?<i className="fa-regular fa-eye"></i>:<i className="fa-regular fa-eye-slash"></i>}
+                </span>
                 <label htmlFor="currentpass" style={{ color: "black" }}>
                   Current Password
                 </label>
@@ -243,7 +258,7 @@ const Navbar = () => {
 
               <div className="form-floating mb-3">
                 <input
-                  type="password"
+                  type={show7}
                   className="form-control"
                   id="forgetpass"
                   name="forgetpass"
@@ -251,13 +266,25 @@ const Navbar = () => {
                   onChange={onchangeforget}
                   value={user.forgetpass}
                 />
+                <span
+                  className="hspass"
+                  onClick={() => {
+                    if (show7 === "password") {
+                      setshow7("text");
+                    } else {
+                      setshow7("password");
+                    }
+                  }}
+                >
+                  {show7==="password"?<i className="fa-regular fa-eye"></i>:<i className="fa-regular fa-eye-slash"></i>}
+                </span>
                 <label htmlFor="forgetpass" style={{ color: "black" }}>
                   Password
                 </label>
               </div>
               <div className="form-floating mb-3 my-3">
                 <input
-                  type="password"
+                  type={show8}
                   className="form-control"
                   id="forgetcpass"
                   name="forgetcpass"
@@ -265,6 +292,18 @@ const Navbar = () => {
                   onChange={onchangeforget}
                   value={user.forgetcpass}
                 />
+                <span
+                  className="hspass"
+                  onClick={() => {
+                    if (show8 === "password") {
+                      setshow8("text");
+                    } else {
+                      setshow8("password");
+                    }
+                  }}
+                >
+                  {show8==="password"?<i className="fa-regular fa-eye"></i>:<i className="fa-regular fa-eye-slash"></i>}
+                </span>
                 <label htmlFor="forgetcpass" style={{ color: "black" }}>
                   Confirm Password
                 </label>

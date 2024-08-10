@@ -101,3 +101,14 @@ ul{
   right: 2px !important;
   left: auto;
 }
+.form-control {
+  display: inline;
+}
+.hspass{
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  color: black;
+  cursor: pointer;
+  font-size:20px;
+}

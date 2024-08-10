@@ -5,6 +5,8 @@ import ReCAPTCHA from "react-google-recaptcha";
 
 
 function Signup() {
+  const [show1, setshow1] = useState(<i className="fa-regular fa-eye"></i>);
+  const [show2, setshow2] = useState(<i className="fa-regular fa-eye"></i>);
   let signcaptcha;
 let signupcaptcha="";
   const setsignCaptchaRef = (ref) => {
@@ -190,6 +192,17 @@ let signupcaptcha="";
             onChange={onchange}
             value={credent.pass}
           />
+          <span className="hspass"  onClick={()=>{
+          let  x=document.getElementById("pass");
+            if(x.type==="password"){
+             x.type="text";
+             setshow1(<i className="fa-regular fa-eye-slash"></i>);
+            }else{
+              x.type="password";
+              setshow1(<i className="fa-regular fa-eye"></i>)
+            }
+          }
+          }>{show1}</span>
           <label htmlFor="pass" style={{ color: "black" }}>
             Password
           </label>
@@ -204,6 +217,17 @@ let signupcaptcha="";
             onChange={onchange}
             value={credent.cpass}
           />
+           <span className="hspass" onClick={()=>{
+          let  x=document.getElementById("cpass");
+            if(x.type==="password"){
+             x.type="text";
+             setshow2(<i className="fa-regular fa-eye-slash"></i>);
+            }else{
+              x.type="password";
+              setshow2(<i className="fa-regular fa-eye"></i>)
+            }
+          }
+          }>{show2}</span>
           <label htmlFor="cpass" style={{ color: "black" }}>
             Confirm Password
           </label>
