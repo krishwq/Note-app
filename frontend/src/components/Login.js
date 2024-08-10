@@ -253,7 +253,7 @@ function Login() {
         <br /> <h6 style={{ display: "inline" }}>Forget Password ?</h6>
         &nbsp;&nbsp;
         <Link to="/login" onClick={resetpass}>
-          Reset Pass
+          Reset Password
         </Link>
       </div>
     </>
