@@ -2,11 +2,13 @@ import React, { useState, useContext, useRef } from "react";
 import { Link, useHistory } from "react-router-dom";
 import noteContext from "../context/Notes/noteContext";
 import ReCAPTCHA from "react-google-recaptcha";
+import Loader from "./Loader";
 
 function Login() {
   const [show3, setshow3] = useState(<i className="fa-regular fa-eye"></i>);
   const [show4, setshow4] = useState("password");
   const [show5, setshow5] = useState("password");
+  const [loading, setloading] = useState(false);
   let logincptcha = "";
   let logcaptcha;
   let forgetcaptcha;
@@ -57,6 +59,7 @@ function Login() {
       showalart("Please Validate the captcha", "warning");
       logcaptcha.reset();
     } else {
+      setloading(true);
       const response = await fetch(
         `https://note-app-3-lfli.onrender.com/api/auth/login`,
         {
@@ -82,6 +85,7 @@ function Login() {
         logincptcha = "";
         logcaptcha.reset();
       }
+      setloading(false);
     }
   };
   const handleforget = async (e) => {
@@ -347,7 +351,7 @@ function Login() {
               state.mode === "dark" ? "info" : "dark"
             } my-3`}
           >
-            Login
+            {loading===true?<Loader/>:""}Login
           </button>
         </form>
         <br />

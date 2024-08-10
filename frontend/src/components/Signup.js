@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import noteContext from "../context/Notes/noteContext";
 import ReCAPTCHA from "react-google-recaptcha";
-import loader from "./loadingdark.gif";
+import Loader from "./Loader";
 
 
 function Signup() {
@@ -40,6 +40,7 @@ let signupcaptcha="";
       setAlart(null);
     }, 2000);
   };
+  const [loading, setloading] = useState(false);
   const handlesubmit = async (e) => {
     e.preventDefault();
     if(credent.name==="" || credent.dob===""||credent.email===""|| credent.gender===""||credent.mobile===""||credent.pass===""||credent.cpass===""){
@@ -61,6 +62,7 @@ let signupcaptcha="";
       signcaptcha.reset();
     }
    else if (credent.pass === credent.cpass) {
+    setloading(true);
       const response = await fetch(
         `https://note-app-3-lfli.onrender.com/api/auth/createuser`,
         {
@@ -96,6 +98,7 @@ let signupcaptcha="";
         signcaptcha.reset();
         signupcaptcha="";
       }
+      setloading(false);
     }else{
       showalart("Please give the same passord in passord and confirm password", "warning");
       signcaptcha.reset();
@@ -235,7 +238,7 @@ let signupcaptcha="";
         </div>
         <ReCAPTCHA ref={(r) => setsignCaptchaRef(r) } sitekey="6LeItSMqAAAAAL73NtPX23w7lMrMCajqNk0CYDL2" onChange={onChangesign} />
         <button type="submit" className={`btn btn-${state.mode==="dark"?"info":"dark"} my-3`}>
-          {loader}Register
+          {loading===true?<Loader/>:""}Register
         </button>
       </form>
       <h6 style={{display:"inline"}}>Already have an account ?</h6>&nbsp;&nbsp;<Link to="/login">Login</Link>
