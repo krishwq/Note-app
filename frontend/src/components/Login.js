@@ -1,6 +1,7 @@
 import React, { useState, useContext, useRef } from "react";
 import { Link, useHistory } from "react-router-dom";
 import noteContext from "../context/Notes/noteContext";
+import ReCAPTCHA from "react-google-recaptcha";
 
 function Login() {
   const ref = useRef();
@@ -13,6 +14,9 @@ function Login() {
     forgetpass: "",
     forgetcpass: "",
   });
+  function onChange(value) {
+    console.log("Captcha value:", value);
+  }
   let history = useHistory();
   const showalart = (massage, type) => {
     setAlart({
@@ -238,6 +242,7 @@ function Login() {
               Password
             </label>
           </div>
+          <ReCAPTCHA sitekey="6LeXtCMqAAAAAHZ_TXcg_CrdHtuMtKdnQqHUd9LO" onChange={onChange} />
           <button
             type="submit"
             className={`btn btn-${
