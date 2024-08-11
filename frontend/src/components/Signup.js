@@ -5,12 +5,10 @@ import ReCAPTCHA from "react-google-recaptcha";
 import Loader from "./Loader";
 
 function Signup() {
-  const [show1, setshow1] = useState(<i className="fa-regular fa-eye"></i>);
-  const [show2, setshow2] = useState(<i className="fa-regular fa-eye"></i>);
+  const [show1, setshow1] = useState("password");
+  const [show2, setshow2] = useState("password");
   const [isverified, setisverified] = useState(false);
   const [issend, setissend] = useState(false);
-  let otp=Math.floor((Math.random() * 999999) + 100000);
- 
   let signcaptcha;
   let signupcaptcha = "";
   const setsignCaptchaRef = (ref) => {
@@ -44,37 +42,35 @@ function Signup() {
     }, 2000);
   };
   const [loading, setloading] = useState(false);
-  const sendotp=async(e)=>{
+  const sendotp = async (e) => {
+    const otp = Math.floor(Math.random() * 999999 + 100000);
     e.preventDefault();
     if (
       credent.name === "" ||
       credent.dob === "" ||
       credent.email === "" ||
       credent.gender === "" ||
-      credent.mobile === "" 
+      credent.mobile === ""
     ) {
       showalart("Please fill all the details", "warning");
     } else if (credent.name.length < 3) {
       showalart("Please enter name of atleast 3 character", "warning");
     } else if (credent.mobile.length < 10) {
       showalart("Please enter a valid 10 digit mobile number", "warning");
-    } 
-    else{
+    } else {
       setloading(true);
-      const response = await fetch(
-        `https://note-app-3-lfli.onrender.com/api/sendmail/otp`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: credent.name,
-            userEmail: credent.email,
-            otp:otp,
-          }),
-        }
-      );
+      localStorage.setItem("otp", otp);
+      const response = await fetch(`http://localhost:5000/api/sendmail/otp`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: credent.name,
+          userEmail: credent.email,
+          otp: otp,
+        }),
+      });
       const json = await response.json();
       if (json.success) {
         showalart("OTP Send Successfully", "success");
@@ -84,7 +80,21 @@ function Signup() {
       }
       setloading(false);
     }
-  }
+  };
+  const verifyotp = (e) => {
+    e.preventDefault();
+    let sendedotp = localStorage.getItem("otp");
+    const userotp = document.getElementById("otp");
+    if (userotp.value === sendedotp) {
+      showalart("Email Verified Successfully", "success");
+      setisverified(true);
+      localStorage.removeItem("otp");
+    } else {
+      showalart("Invalid OTP", "danger");
+      setissend(false);
+      localStorage.removeItem("otp");
+    }
+  };
   const handlesubmit = async (e) => {
     e.preventDefault();
     if (
@@ -144,10 +154,14 @@ function Signup() {
         signupcaptcha = "";
         history.push("/login");
         signcaptcha.reset();
+        setissend(false);
+        setisverified(false);
       } else {
         showalart("Email already exist", "danger");
         signcaptcha.reset();
         signupcaptcha = "";
+        setissend(false);
+        setisverified(false);
       }
       setloading(false);
     } else {
@@ -244,7 +258,7 @@ function Signup() {
           <>
             <div className="form-floating mb-3">
               <input
-                type="password"
+                type={show1}
                 className="form-control"
                 id="pass"
                 name="pass"
@@ -255,17 +269,18 @@ function Signup() {
               <span
                 className="hspass"
                 onClick={() => {
-                  let x = document.getElementById("pass");
-                  if (x.type === "password") {
-                    x.type = "text";
-                    setshow1(<i className="fa-regular fa-eye-slash"></i>);
+                  if (show1 === "password") {
+                    setshow1("text");
                   } else {
-                    x.type = "password";
-                    setshow1(<i className="fa-regular fa-eye"></i>);
+                    setshow1("password");
                   }
                 }}
               >
-                {show1}
+                {show1 === "password" ? (
+                  <i className="fa-regular fa-eye"></i>
+                ) : (
+                  <i className="fa-regular fa-eye-slash"></i>
+                )}
               </span>
               <label htmlFor="pass" style={{ color: "black" }}>
                 Password
@@ -273,7 +288,7 @@ function Signup() {
             </div>
             <div className="form-floating mb-3">
               <input
-                type="password"
+                type={show2}
                 className="form-control"
                 id="cpass"
                 name="cpass"
@@ -284,17 +299,18 @@ function Signup() {
               <span
                 className="hspass"
                 onClick={() => {
-                  let x = document.getElementById("cpass");
-                  if (x.type === "password") {
-                    x.type = "text";
-                    setshow2(<i className="fa-regular fa-eye-slash"></i>);
+                  if (show2 === "password") {
+                    setshow2("text");
                   } else {
-                    x.type = "password";
-                    setshow2(<i className="fa-regular fa-eye"></i>);
+                    setshow2("password");
                   }
                 }}
               >
-                {show2}
+                {show2 === "password" ? (
+                  <i className="fa-regular fa-eye"></i>
+                ) : (
+                  <i className="fa-regular fa-eye-slash"></i>
+                )}
               </span>
               <label htmlFor="cpass" style={{ color: "black" }}>
                 Confirm Password
@@ -314,30 +330,41 @@ function Signup() {
               {loading === true ? <Loader /> : ""}Register
             </button>
           </>
+        ) : issend === false ? (
+          <button
+            type="button"
+            className={`btn btn-${
+              state.mode === "dark" ? "info" : "dark"
+            } my-3`}
+            onClick={sendotp}
+          >
+            {loading === true ? <Loader /> : ""}Send OTP
+          </button>
         ) : (
-          issend===false?<button
-          type="button"
-          className={`btn btn-${
-            state.mode === "dark" ? "info" : "dark"
-          } my-3`}
-           onClick={sendotp}
-        >
-          {loading === true ? <Loader /> : ""}Send OTP
-        </button>
-        :<>
-        <div className="form-floating">
-  <input type="password" className="form-control" id="otp" name="otp" placeholder="Password"/>
-  <label htmlFor="otp" style={{ color: "black" }}>OTP</label>
-</div>
-        <button
-          type="button"
-          className={`btn btn-${
-            state.mode === "dark" ? "info" : "dark"
-          } my-3`}
-        >
-          Verify OTP
-        </button>
-        </>)}
+          <>
+            <div className="form-floating">
+              <input
+                type="password"
+                className="form-control"
+                id="otp"
+                name="otp"
+                placeholder="Password"
+              />
+              <label htmlFor="otp" style={{ color: "black" }}>
+                OTP
+              </label>
+            </div>
+            <button
+              type="button"
+              className={`btn btn-${
+                state.mode === "dark" ? "info" : "dark"
+              } my-3`}
+              onClick={verifyotp}
+            >
+              Verify OTP
+            </button>
+          </>
+        )}
       </form>
       <h6 style={{ display: "inline" }}>Already have an account ?</h6>
       &nbsp;&nbsp;<Link to="/login">Login</Link>
