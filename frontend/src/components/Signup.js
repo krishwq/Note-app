@@ -4,22 +4,25 @@ import noteContext from "../context/Notes/noteContext";
 import ReCAPTCHA from "react-google-recaptcha";
 import Loader from "./Loader";
 
-
 function Signup() {
   const [show1, setshow1] = useState(<i className="fa-regular fa-eye"></i>);
   const [show2, setshow2] = useState(<i className="fa-regular fa-eye"></i>);
+  const [isverified, setisverified] = useState(false);
+  const [issend, setissend] = useState(false);
+  let otp=Math.floor((Math.random() * 999999) + 100000);
+ 
   let signcaptcha;
-let signupcaptcha="";
+  let signupcaptcha = "";
   const setsignCaptchaRef = (ref) => {
     if (ref) {
-      return signcaptcha= ref;
+      return (signcaptcha = ref);
     }
- };
- function onChangesign(value) {
-  signupcaptcha=value;
-}
+  };
+  function onChangesign(value) {
+    signupcaptcha = value;
+  }
   const context = useContext(noteContext);
-  let history=useHistory();
+  let history = useHistory();
   const { state, setAlart } = context;
   const [credent, setcredent] = useState({
     name: "",
@@ -41,28 +44,74 @@ let signupcaptcha="";
     }, 2000);
   };
   const [loading, setloading] = useState(false);
+  const sendotp=async(e)=>{
+    e.preventDefault();
+    if (
+      credent.name === "" ||
+      credent.dob === "" ||
+      credent.email === "" ||
+      credent.gender === "" ||
+      credent.mobile === "" 
+    ) {
+      showalart("Please fill all the details", "warning");
+    } else if (credent.name.length < 3) {
+      showalart("Please enter name of atleast 3 character", "warning");
+    } else if (credent.mobile.length < 10) {
+      showalart("Please enter a valid 10 digit mobile number", "warning");
+    } 
+    else{
+      setloading(true);
+      const response = await fetch(
+        `https://note-app-3-lfli.onrender.com/api/sendmail/otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: credent.name,
+            userEmail: credent.email,
+            otp:otp,
+          }),
+        }
+      );
+      const json = await response.json();
+      if (json.success) {
+        showalart("OTP Send Successfully", "success");
+        setissend(true);
+      } else {
+        showalart("Email not found", "danger");
+      }
+      setloading(false);
+    }
+  }
   const handlesubmit = async (e) => {
     e.preventDefault();
-    if(credent.name==="" || credent.dob===""||credent.email===""|| credent.gender===""||credent.mobile===""||credent.pass===""||credent.cpass===""){
+    if (
+      credent.name === "" ||
+      credent.dob === "" ||
+      credent.email === "" ||
+      credent.gender === "" ||
+      credent.mobile === "" ||
+      credent.pass === "" ||
+      credent.cpass === ""
+    ) {
       showalart("Please fill all the details", "warning");
       signcaptcha.reset();
-    }
-    else if(credent.name.length<3){
+    } else if (credent.name.length < 3) {
       showalart("Please enter name of atleast 3 character", "warning");
       signcaptcha.reset();
-    }else if(credent.mobile.length<10){
+    } else if (credent.mobile.length < 10) {
       showalart("Please enter a valid 10 digit mobile number", "warning");
       signcaptcha.reset();
-    }else if(credent.pass.length<8){
+    } else if (credent.pass.length < 8) {
       showalart("Please enter a password of atleast 8 character", "warning");
       signcaptcha.reset();
-    }
-    else if(signupcaptcha===""){
+    } else if (signupcaptcha === "") {
       showalart("Please Validate the captcha", "warning");
       signcaptcha.reset();
-    }
-   else if (credent.pass === credent.cpass) {
-    setloading(true);
+    } else if (credent.pass === credent.cpass) {
+      setloading(true);
       const response = await fetch(
         `https://note-app-3-lfli.onrender.com/api/auth/createuser`,
         {
@@ -83,24 +132,29 @@ let signupcaptcha="";
       const json = await response.json();
       if (json.success) {
         showalart("Register Successfully", "success");
-        setcredent({ name: "",
+        setcredent({
+          name: "",
           dob: "",
           gender: "",
           mobile: "",
           email: "",
           pass: "",
-          cpass: "",})
-          signupcaptcha="";
-         history.push("/login")
-         signcaptcha.reset();
+          cpass: "",
+        });
+        signupcaptcha = "";
+        history.push("/login");
+        signcaptcha.reset();
       } else {
         showalart("Email already exist", "danger");
         signcaptcha.reset();
-        signupcaptcha="";
+        signupcaptcha = "";
       }
       setloading(false);
-    }else{
-      showalart("Please give the same passord in passord and confirm password", "warning");
+    } else {
+      showalart(
+        "Please give the same passord in passord and confirm password",
+        "warning"
+      );
       signcaptcha.reset();
     }
   };
@@ -186,62 +240,107 @@ let signupcaptcha="";
             Email address
           </label>
         </div>
-        <div className="form-floating mb-3">
-          <input
-            type="password"
-            className="form-control"
-            id="pass"
-            name="pass"
-            placeholder="name@example.com"
-            onChange={onchange}
-            value={credent.pass}
-          />
-          <span className="hspass"  onClick={()=>{
-          let  x=document.getElementById("pass");
-            if(x.type==="password"){
-             x.type="text";
-             setshow1(<i className="fa-regular fa-eye-slash"></i>);
-            }else{
-              x.type="password";
-              setshow1(<i className="fa-regular fa-eye"></i>)
-            }
-          }
-          }>{show1}</span>
-          <label htmlFor="pass" style={{ color: "black" }}>
-            Password
-          </label>
-        </div>
-        <div className="form-floating mb-3">
-          <input
-            type="password"
-            className="form-control"
-            id="cpass"
-            name="cpass"
-            placeholder="name@example.com"
-            onChange={onchange}
-            value={credent.cpass}
-          />
-           <span className="hspass" onClick={()=>{
-          let  x=document.getElementById("cpass");
-            if(x.type==="password"){
-             x.type="text";
-             setshow2(<i className="fa-regular fa-eye-slash"></i>);
-            }else{
-              x.type="password";
-              setshow2(<i className="fa-regular fa-eye"></i>)
-            }
-          }
-          }>{show2}</span>
-          <label htmlFor="cpass" style={{ color: "black" }}>
-            Confirm Password
-          </label>
-        </div>
-        <ReCAPTCHA ref={(r) => setsignCaptchaRef(r) } sitekey="6LeItSMqAAAAAL73NtPX23w7lMrMCajqNk0CYDL2" onChange={onChangesign} />
-        <button type="submit" className={`btn btn-${state.mode==="dark"?"info":"dark"} my-3`}>
-          {loading===true?<Loader/>:""}Register
+        {isverified === true ? (
+          <>
+            <div className="form-floating mb-3">
+              <input
+                type="password"
+                className="form-control"
+                id="pass"
+                name="pass"
+                placeholder="name@example.com"
+                onChange={onchange}
+                value={credent.pass}
+              />
+              <span
+                className="hspass"
+                onClick={() => {
+                  let x = document.getElementById("pass");
+                  if (x.type === "password") {
+                    x.type = "text";
+                    setshow1(<i className="fa-regular fa-eye-slash"></i>);
+                  } else {
+                    x.type = "password";
+                    setshow1(<i className="fa-regular fa-eye"></i>);
+                  }
+                }}
+              >
+                {show1}
+              </span>
+              <label htmlFor="pass" style={{ color: "black" }}>
+                Password
+              </label>
+            </div>
+            <div className="form-floating mb-3">
+              <input
+                type="password"
+                className="form-control"
+                id="cpass"
+                name="cpass"
+                placeholder="name@example.com"
+                onChange={onchange}
+                value={credent.cpass}
+              />
+              <span
+                className="hspass"
+                onClick={() => {
+                  let x = document.getElementById("cpass");
+                  if (x.type === "password") {
+                    x.type = "text";
+                    setshow2(<i className="fa-regular fa-eye-slash"></i>);
+                  } else {
+                    x.type = "password";
+                    setshow2(<i className="fa-regular fa-eye"></i>);
+                  }
+                }}
+              >
+                {show2}
+              </span>
+              <label htmlFor="cpass" style={{ color: "black" }}>
+                Confirm Password
+              </label>
+            </div>
+            <ReCAPTCHA
+              ref={(r) => setsignCaptchaRef(r)}
+              sitekey="6LeItSMqAAAAAL73NtPX23w7lMrMCajqNk0CYDL2"
+              onChange={onChangesign}
+            />
+            <button
+              type="submit"
+              className={`btn btn-${
+                state.mode === "dark" ? "info" : "dark"
+              } my-3`}
+            >
+              {loading === true ? <Loader /> : ""}Register
+            </button>
+          </>
+        ) : (
+          issend===false?<button
+          type="button"
+          className={`btn btn-${
+            state.mode === "dark" ? "info" : "dark"
+          } my-3`}
+           onClick={sendotp}
+        >
+          {loading === true ? <Loader /> : ""}Send OTP
         </button>
+        :<>
+        <div className="form-floating">
+  <input type="password" className="form-control" id="otp" name="otp" placeholder="Password"/>
+  <label htmlFor="otp" style={{ color: "black" }}>OTP</label>
+</div>
+        <button
+          type="button"
+          className={`btn btn-${
+            state.mode === "dark" ? "info" : "dark"
+          } my-3`}
+        >
+          Verify OTP
+        </button>
+        </>)}
       </form>
-      <h6 style={{display:"inline"}}>Already have an account ?</h6>&nbsp;&nbsp;<Link to="/login">Login</Link>
+      <h6 style={{ display: "inline" }}>Already have an account ?</h6>
+      &nbsp;&nbsp;<Link to="/login">Login</Link>
     </div>
   );
 }
