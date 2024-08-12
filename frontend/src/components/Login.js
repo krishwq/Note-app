@@ -61,7 +61,7 @@ function Login() {
     } else {
       setloading(true);
       const response = await fetch(
-        `https://note-app-3-lfli.onrender.com/api/auth/login`,
+        `https://note-app-4-pdgm.onrender.com/api/auth/login`,
         {
           method: "POST",
           headers: {
@@ -105,7 +105,7 @@ function Login() {
       forgetcaptcha.reset();
     } else if (user.forgetpass === user.forgetcpass) {
       const response = await fetch(
-        `https://note-app-3-lfli.onrender.com/api/auth/forgetpass`,
+        `https://note-app-4-pdgm.onrender.com/api/auth/forgetpass`,
         {
           method: "PUT",
           headers: {

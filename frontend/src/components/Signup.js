@@ -60,7 +60,7 @@ function Signup() {
     } else {
       setloading(true);
       localStorage.setItem("otp", otp);
-      const response = await fetch(`http://localhost:5000/api/sendmail/otp`, {
+      const response = await fetch(`https://note-app-4-pdgm.onrender.com/api/sendmail/otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -123,7 +123,7 @@ function Signup() {
     } else if (credent.pass === credent.cpass) {
       setloading(true);
       const response = await fetch(
-        `https://note-app-3-lfli.onrender.com/api/auth/createuser`,
+        `https://note-app-4-pdgm.onrender.com/api/auth/createuser`,
         {
           method: "POST",
           headers: {
@@ -363,6 +363,15 @@ function Signup() {
             >
               Verify OTP
             </button>
+            <button
+            type="button"
+            className={`btn btn-${
+              state.mode === "dark" ? "info" : "dark"
+            } my-3 mx-3`}
+            onClick={sendotp}
+          >
+            {loading === true ? <Loader /> : ""}Resend OTP
+          </button>
           </>
         )}
       </form>
