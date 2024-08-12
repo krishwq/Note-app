@@ -3,12 +3,18 @@ import { Link, useHistory } from "react-router-dom";
 import noteContext from "../context/Notes/noteContext";
 import ReCAPTCHA from "react-google-recaptcha";
 import Loader from "./Loader";
+import PasswordChecklist from "react-password-checklist";
 
 function Signup() {
   const [show1, setshow1] = useState("password");
   const [show2, setshow2] = useState("password");
   const [isverified, setisverified] = useState(false);
   const [issend, setissend] = useState(false);
+  const [showcheckpass, setshowcheckpass] = useState(false);
+  const [showcheckcpass, setshowcheckcpass] = useState(false);
+  const [isverifypass, setisverifypass] = useState(false);
+  const [isverifycpass, setisverifycpass] = useState(false);
+
   let signcaptcha;
   let signupcaptcha = "";
   const setsignCaptchaRef = (ref) => {
@@ -60,17 +66,20 @@ function Signup() {
     } else {
       setloading(true);
       localStorage.setItem("otp", otp);
-      const response = await fetch(`https://note-app-4-pdgm.onrender.com/api/sendmail/otp`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: credent.name,
-          userEmail: credent.email,
-          otp: otp,
-        }),
-      });
+      const response = await fetch(
+        `https://note-app-4-pdgm.onrender.com/api/sendmail/otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: credent.name,
+            userEmail: credent.email,
+            otp: otp,
+          }),
+        }
+      );
       const json = await response.json();
       if (json.success) {
         showalart("OTP Send Successfully", "success");
@@ -120,7 +129,11 @@ function Signup() {
     } else if (signupcaptcha === "") {
       showalart("Please Validate the captcha", "warning");
       signcaptcha.reset();
-    } else if (credent.pass === credent.cpass) {
+    }else if(isverifypass && isverifycpass){
+      showalart("Please Validate the captcha", "warning");
+      signcaptcha.reset();
+    }
+     else if (credent.pass === credent.cpass) {
       setloading(true);
       const response = await fetch(
         `https://note-app-4-pdgm.onrender.com/api/auth/createuser`,
@@ -265,6 +278,12 @@ function Signup() {
                 placeholder="name@example.com"
                 onChange={onchange}
                 value={credent.pass}
+                onFocus={() => {
+                  setshowcheckpass(true);
+                }}
+                onBlur={() => {
+                  setshowcheckpass(false);
+                }}
               />
               <span
                 className="hspass"
@@ -286,6 +305,16 @@ function Signup() {
                 Password
               </label>
             </div>
+            <PasswordChecklist
+              className={showcheckpass === false ? "d-none" : ""}
+              style={{marginBottom:"15px"}}
+              rules={["minLength", "specialChar", "number", "capital"]}
+              minLength={8}
+              value={credent.pass}
+              onChange={(isValid) => {
+                setisverifypass(isValid);
+              }}
+            />
             <div className="form-floating mb-3">
               <input
                 type={show2}
@@ -295,6 +324,12 @@ function Signup() {
                 placeholder="name@example.com"
                 onChange={onchange}
                 value={credent.cpass}
+                onFocus={() => {
+                  setshowcheckcpass(true);
+                }}
+                onBlur={() => {
+                  setshowcheckcpass(false);
+                }}
               />
               <span
                 className="hspass"
@@ -315,6 +350,16 @@ function Signup() {
               <label htmlFor="cpass" style={{ color: "black" }}>
                 Confirm Password
               </label>
+              <PasswordChecklist
+              className={showcheckcpass === false ? "d-none" : ""}
+              style={{marginBottom:"15px",marginTop:"15px"}}
+              rules={["minLength", "specialChar", "number", "capital"]}
+              minLength={8}
+              value={credent.cpass}
+              onChange={(isValid) => {
+                setisverifycpass(isValid);
+              }}
+            />
             </div>
             <ReCAPTCHA
               ref={(r) => setsignCaptchaRef(r)}
@@ -364,14 +409,14 @@ function Signup() {
               Verify OTP
             </button>
             <button
-            type="button"
-            className={`btn btn-${
-              state.mode === "dark" ? "info" : "dark"
-            } my-3 mx-3`}
-            onClick={sendotp}
-          >
-            {loading === true ? <Loader /> : ""}Resend OTP
-          </button>
+              type="button"
+              className={`btn btn-${
+                state.mode === "dark" ? "info" : "dark"
+              } my-3 mx-3`}
+              onClick={sendotp}
+            >
+              {loading === true ? <Loader /> : ""}Resend OTP
+            </button>
           </>
         )}
       </form>
