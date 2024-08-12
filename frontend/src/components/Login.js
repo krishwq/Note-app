@@ -3,12 +3,70 @@ import { Link, useHistory } from "react-router-dom";
 import noteContext from "../context/Notes/noteContext";
 import ReCAPTCHA from "react-google-recaptcha";
 import Loader from "./Loader";
+import PasswordChecklist from "react-password-checklist";
 
 function Login() {
   const [show3, setshow3] = useState(<i className="fa-regular fa-eye"></i>);
   const [show4, setshow4] = useState("password");
   const [show5, setshow5] = useState("password");
   const [loading, setloading] = useState(false);
+  const [forloading, setforloading] = useState(false);
+  const [showcheckpass, setshowcheckpass] = useState(false);
+  const [showforpass, setshowforpass] = useState(false);
+  const [showforcpass, setshowforcpass] = useState(false);
+  const [isverifypass, setisverifypass] = useState(false);
+  const [isforpass, setisforpass] = useState(false);
+  const [isforcpass, setisforcpass] = useState(false);
+  const [isverified, setisverified] = useState(false);
+  const [issend, setissend] = useState(false);
+  const sendotp = async (e) => {
+    const otp = Math.floor(Math.random() * 999999 + 100000);
+    e.preventDefault();
+    if (
+     user.forgetemail===""
+    ) {
+      showalart("Please fill the email id", "warning");
+    } else {
+      setforloading(true);
+      localStorage.setItem("otp", otp);
+      const response = await fetch(
+        `https://note-app-4-pdgm.onrender.com/api/sendmail/otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: "user",
+            userEmail: user.forgetemail,
+            otp: otp,
+          }),
+        }
+      );
+      const json = await response.json();
+      if (json.success) {
+        showalart("OTP Send Successfully", "success");
+        setissend(true);
+      } else {
+        showalart("Email not found", "danger");
+      }
+      setforloading(false);
+    }
+  };
+  const verifyotp = (e) => {
+    e.preventDefault();
+    let sendedotp = localStorage.getItem("otp");
+    const userotp = document.getElementById("otp");
+    if (userotp.value === sendedotp) {
+      showalart("Email Verified Successfully", "success");
+      setisverified(true);
+      localStorage.removeItem("otp");
+    } else {
+      showalart("Invalid OTP", "danger");
+      setissend(false);
+      localStorage.removeItem("otp");
+    }
+  };
   let logincptcha = "";
   let logcaptcha;
   let forgetcaptcha;
@@ -58,6 +116,12 @@ function Login() {
     } else if (logincptcha === "") {
       showalart("Please Validate the captcha", "warning");
       logcaptcha.reset();
+    } else if (!isverifypass) {
+      showalart(
+        "Password should contain UPPERCASE ,lowercase,number and special character",
+        "warning"
+      );
+      logcaptcha.reset();
     } else {
       setloading(true);
       const response = await fetch(
@@ -103,6 +167,12 @@ function Login() {
     } else if (resetcaptcha === "") {
       showalart("Please Validate the captcha", "warning");
       forgetcaptcha.reset();
+    } else if (!isforpass || !isforcpass) {
+      showalart(
+        "Password should contain UPPERCASE ,lowercase,number and special character",
+        "warning"
+      );
+      forgetcaptcha.reset();
     } else if (user.forgetpass === user.forgetcpass) {
       const response = await fetch(
         `https://note-app-4-pdgm.onrender.com/api/auth/forgetpass`,
@@ -122,10 +192,14 @@ function Login() {
         showalart("Password Reset Successfully", "success");
         resetcaptcha = "";
         forgetcaptcha.reset();
+        setissend(false);
+        setisverified(false);
       } else {
         showalart("Email Not Found", "danger");
         resetcaptcha = "";
         forgetcaptcha.reset();
+        setissend(false);
+        setisverified(false);
       }
       setuser({ forgetemail: "", forgetpass: "", forgetcpass: "" });
 
@@ -189,102 +263,180 @@ function Login() {
                 className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                onClick={()=>{
+                  setisverified(false);
+                  setissend(false);
+                  setuser({ forgetemail: "", forgetpass: "", forgetcpass: "" });
+                }}
               ></button>
             </div>
             <form>
-            <div className="modal-body">
-              <div className="form-floating mb-3">
-                <input
-                  type="email"
-                  className="form-control"
-                  id="forgetemail"
-                  name="forgetemail"
-                  placeholder="name@example.com"
-                  onChange={onchangeforget}
-                  value={user.forgetemail}
+              <div className="modal-body">
+                <div className="form-floating mb-3">
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="forgetemail"
+                    name="forgetemail"
+                    placeholder="name@example.com"
+                    onChange={onchangeforget}
+                    value={user.forgetemail}
+                  />
+                  <label htmlFor="forgetemail" style={{ color: "black" }}>
+                    Email Address
+                  </label>
+                </div>
+                {isverified === true ?
+                <>
+                <div className="form-floating mb-3">
+                  <input
+                    type={show4}
+                    className="form-control"
+                    id="forgetpass"
+                    name="forgetpass"
+                    placeholder="name@example.com"
+                    onChange={onchangeforget}
+                    value={user.forgetpass}
+                    onFocus={() => {
+                      setshowforpass(true);
+                    }}
+                    onBlur={() => {
+                      setshowforpass(false);
+                    }}
+                  />
+                  <span
+                    className="hspass"
+                    onClick={() => {
+                      if (show4 === "password") {
+                        setshow4("text");
+                      } else {
+                        setshow4("password");
+                      }
+                    }}
+                  >
+                    {show4 === "password" ? (
+                      <i className="fa-regular fa-eye"></i>
+                    ) : (
+                      <i className="fa-regular fa-eye-slash"></i>
+                    )}
+                  </span>
+                  <label htmlFor="forgetpass" style={{ color: "black" }}>
+                    Password
+                  </label>
+                  <PasswordChecklist
+                    className={showforpass === false ? "d-none" : ""}
+                    style={{ marginBottom: "15px", marginTop: "15px" }}
+                    rules={["minLength", "specialChar", "number", "capital"]}
+                    minLength={8}
+                    value={user.forgetpass}
+                    onChange={(isValid) => {
+                      setisforpass(isValid);
+                    }}
+                  />
+                </div>
+                <div className="form-floating mb-3 my-3">
+                  <input
+                    type={show5}
+                    className="form-control"
+                    id="forgetcpass"
+                    name="forgetcpass"
+                    placeholder="name@example.com"
+                    onChange={onchangeforget}
+                    value={user.forgetcpass}
+                    onFocus={() => {
+                      setshowforcpass(true);
+                    }}
+                    onBlur={() => {
+                      setshowforcpass(false);
+                    }}
+                  />
+                  <span
+                    className="hspass"
+                    onClick={() => {
+                      if (show5 === "password") {
+                        setshow5("text");
+                      } else {
+                        setshow5("password");
+                      }
+                    }}
+                  >
+                    {show5 === "password" ? (
+                      <i className="fa-regular fa-eye"></i>
+                    ) : (
+                      <i className="fa-regular fa-eye-slash"></i>
+                    )}
+                  </span>
+                  <label htmlFor="forgetcpass" style={{ color: "black" }}>
+                    Confirm Password
+                  </label>
+                  <PasswordChecklist
+                    className={showforcpass === false ? "d-none" : ""}
+                    style={{ marginBottom: "15px", marginTop: "15px" }}
+                    rules={["minLength", "specialChar", "number", "capital"]}
+                    minLength={8}
+                    value={user.forgetcpass}
+                    onChange={(isValid) => {
+                      setisforcpass(isValid);
+                    }}
+                  />
+                </div>
+                <ReCAPTCHA
+                  ref={(r) => setforCaptchaRef(r)}
+                  sitekey="6LeItSMqAAAAAL73NtPX23w7lMrMCajqNk0CYDL2"
+                  onChange={onChangereset}
                 />
-                <label htmlFor="forgetemail" style={{ color: "black" }}>
-                  Email Address
-                </label>
-              </div>
-
-              <div className="form-floating mb-3">
-                <input
-                  type={show4}
-                  className="form-control"
-                  id="forgetpass"
-                  name="forgetpass"
-                  placeholder="name@example.com"
-                  onChange={onchangeforget}
-                  value={user.forgetpass}
-                />
-                <span
-                  className="hspass"
-                  onClick={() => {
-                    if (show4 === "password") {
-                      setshow4("text");
-                    } else {
-                      setshow4("password");
-                    }
-                  }}
-                >
-                  {show4==="password"?<i className="fa-regular fa-eye"></i>:<i className="fa-regular fa-eye-slash"></i>}
-                </span>
-                <label htmlFor="forgetpass" style={{ color: "black" }}>
-                  Password
-                </label>
-              </div>
-              <div className="form-floating mb-3 my-3">
-                <input
-                  type={show5}
-                  className="form-control"
-                  id="forgetcpass"
-                  name="forgetcpass"
-                  placeholder="name@example.com"
-                  onChange={onchangeforget}
-                  value={user.forgetcpass}
-                />
-                <span
-                  className="hspass"
-                  onClick={() => {
-                    if (show5 === "password") {
-                      setshow5("text");
-                    } else {
-                      setshow5("password");
-                    }
-                  }}
-                >
-                  {show5==="password"?<i className="fa-regular fa-eye"></i>:<i className="fa-regular fa-eye-slash"></i>}
-                </span>
-                <label htmlFor="forgetcpass" style={{ color: "black" }}>
-                  Confirm Password
-                </label>
-              </div>
-              <ReCAPTCHA
-                ref={(r) => setforCaptchaRef(r)}
-                sitekey="6LeItSMqAAAAAL73NtPX23w7lMrMCajqNk0CYDL2"
-                onChange={onChangereset}
-              />
-              
-            </div>
-
-            <div className="modal-footer">
-              <button
+               <button
                 type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-                ref={refclose}
-              >
-                Close
-              </button>
-              <button
-                type="button"
-                className={`btn btn-${state.mode === "dark" ? "info" : "dark"}`}
+                className={`btn btn-${state.mode === "dark" ? "info" : "dark"} my-3`}
                 onClick={handleforget}
               >
                 Reset
               </button>
+              </>:issend === false ? (
+          <button
+            type="button"
+            className={`btn btn-${
+              state.mode === "dark" ? "info" : "dark"
+            } my-3`}
+            onClick={sendotp}
+          >
+            {forloading === true ? <Loader /> : ""}Send OTP
+          </button>
+        ) : (
+          <>
+            <div className="form-floating">
+              <input
+                type="password"
+                className="form-control"
+                id="otp"
+                name="otp"
+                placeholder="Password"
+              />
+              <label htmlFor="otp" style={{ color: "black" }}>
+                OTP
+              </label>
             </div>
+            <button
+              type="button"
+              className={`btn btn-${
+                state.mode === "dark" ? "info" : "dark"
+              } my-3`}
+              onClick={verifyotp}
+            >
+              Verify OTP
+            </button>
+            <button
+              type="button"
+              className={`btn btn-${
+                state.mode === "dark" ? "info" : "dark"
+              } my-3 mx-3`}
+              onClick={sendotp}
+            >
+              {forloading === true ? <Loader /> : ""}Resend OTP
+            </button>
+          </>
+        )}
+              </div>
             </form>
           </div>
         </div>
@@ -320,6 +472,12 @@ function Login() {
               placeholder="name@example.com"
               onChange={onchange}
               value={credent.pass}
+              onFocus={() => {
+                setshowcheckpass(true);
+              }}
+              onBlur={() => {
+                setshowcheckpass(false);
+              }}
             />
             <span
               className="hspass"
@@ -339,6 +497,16 @@ function Login() {
             <label htmlFor="pass" style={{ color: "black" }}>
               Password
             </label>
+            <PasswordChecklist
+              className={showcheckpass === false ? "d-none" : ""}
+              style={{ marginBottom: "15px", marginTop: "15px" }}
+              rules={["minLength", "specialChar", "number", "capital"]}
+              minLength={8}
+              value={credent.pass}
+              onChange={(isValid) => {
+                setisverifypass(isValid);
+              }}
+            />
           </div>
           <ReCAPTCHA
             ref={(r) => setlogCaptchaRef(r)}
@@ -351,7 +519,7 @@ function Login() {
               state.mode === "dark" ? "info" : "dark"
             } my-3`}
           >
-            {loading===true?<Loader/>:""}Login
+            {loading === true ? <Loader /> : ""}Login
           </button>
         </form>
         <br />

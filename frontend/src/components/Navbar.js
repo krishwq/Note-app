@@ -4,11 +4,17 @@ import noteContext from "../context/Notes/noteContext";
 import image from "./pngwing.com.png";
 import { useHistory } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
+import PasswordChecklist from "react-password-checklist";
+
 
 const Navbar = () => {
   const [show6, setshow6] = useState("password");
   const [show7, setshow7] = useState("password");
   const [show8, setshow8] = useState("password");
+  const [isforpass, setisforpass] = useState(false);
+  const [isforcpass, setisforcpass] = useState(false);
+  const [showforpass, setshowforpass] = useState(false);
+  const [showforcpass, setshowforcpass] = useState(false);
   let forgetpasscaptcha;
   let resetpasscaptcha="";
   const setforgetCaptchaRef = (ref) => {
@@ -129,7 +135,12 @@ const Navbar = () => {
     else if(resetpasscaptcha===""){
       showalart("Please Validate the captcha", "warning");
       forgetpasscaptcha.reset();
-    } else if (user.forgetpass === user.forgetcpass) {
+    }
+    else if(!isforpass || !isforcpass){
+      showalart("Password should contain UPPERCASE ,lowercase,number and special character", "warning");
+      forgetpasscaptcha.reset();
+    } 
+    else if (user.forgetpass === user.forgetcpass) {
       const response = await fetch(
         `https://note-app-4-pdgm.onrender.com/api/auth/changepass`,
         {
@@ -265,6 +276,12 @@ const Navbar = () => {
                   placeholder="name@example.com"
                   onChange={onchangeforget}
                   value={user.forgetpass}
+                  onFocus={() => {
+                    setshowforpass(true);
+                  }}
+                  onBlur={() => {
+                    setshowforpass(false);
+                  }}
                 />
                 <span
                   className="hspass"
@@ -281,6 +298,16 @@ const Navbar = () => {
                 <label htmlFor="forgetpass" style={{ color: "black" }}>
                   Password
                 </label>
+                <PasswordChecklist
+              className={showforpass === false ? "d-none" : ""}
+              style={{marginBottom:"15px",marginTop:"15px"}}
+              rules={["minLength", "specialChar", "number", "capital"]}
+              minLength={8}
+              value={user.forgetpass}
+              onChange={(isValid) => {
+                setisforpass(isValid);
+              }}
+            />
               </div>
               <div className="form-floating mb-3 my-3">
                 <input
@@ -291,6 +318,12 @@ const Navbar = () => {
                   placeholder="name@example.com"
                   onChange={onchangeforget}
                   value={user.forgetcpass}
+                  onFocus={() => {
+                    setshowforcpass(true);
+                  }}
+                  onBlur={() => {
+                    setshowforcpass(false);
+                  }}
                 />
                 <span
                   className="hspass"
@@ -307,6 +340,16 @@ const Navbar = () => {
                 <label htmlFor="forgetcpass" style={{ color: "black" }}>
                   Confirm Password
                 </label>
+                <PasswordChecklist
+              className={showforcpass === false ? "d-none" : ""}
+              style={{marginBottom:"15px",marginTop:"15px"}}
+              rules={["minLength", "specialChar", "number", "capital"]}
+              minLength={8}
+              value={user.forgetcpass}
+              onChange={(isValid) => {
+                setisforcpass(isValid);
+              }}
+            />
               </div>
               <ReCAPTCHA ref={(r) => setforgetCaptchaRef(r) } sitekey="6LeItSMqAAAAAL73NtPX23w7lMrMCajqNk0CYDL2" onChange={onChangeresetpass} />
             </div>

@@ -129,8 +129,8 @@ function Signup() {
     } else if (signupcaptcha === "") {
       showalart("Please Validate the captcha", "warning");
       signcaptcha.reset();
-    }else if(isverifypass && isverifycpass){
-      showalart("Please Validate the captcha", "warning");
+    }else if(!isverifypass || !isverifycpass){
+      showalart("Password should contain UPPERCASE ,lowercase,number and special character", "warning");
       signcaptcha.reset();
     }
      else if (credent.pass === credent.cpass) {
