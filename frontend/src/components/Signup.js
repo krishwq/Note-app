@@ -262,6 +262,7 @@ function Signup() {
             placeholder="name@example.com"
             onChange={onchange}
             value={credent.email}
+            disabled={isverified || issend}
           />
           <label htmlFor="email" style={{ color: "black" }}>
             Email address
@@ -416,6 +417,13 @@ function Signup() {
               onClick={sendotp}
             >
               {loading === true ? <Loader /> : ""}Resend OTP
+            </button>
+            <button
+              type="button"
+              className={`btn btn-secondary my-3 `}
+              onClick={()=>{setissend(false)}}
+            >
+              Cancel
             </button>
           </>
         )}

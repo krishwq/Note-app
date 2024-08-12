@@ -281,6 +281,7 @@ function Login() {
                     placeholder="name@example.com"
                     onChange={onchangeforget}
                     value={user.forgetemail}
+                    disabled={isverified ||issend }
                   />
                   <label htmlFor="forgetemail" style={{ color: "black" }}>
                     Email Address
@@ -433,6 +434,13 @@ function Login() {
               onClick={sendotp}
             >
               {forloading === true ? <Loader /> : ""}Resend OTP
+            </button>
+            <button
+              type="button"
+              className={`btn btn-secondary my-3 `}
+              onClick={()=>{setissend(false)}}
+            >
+              Cancel
             </button>
           </>
         )}

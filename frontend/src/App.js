@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import "./App.css";
 import About from "./components/About";
 import Alert from "./components/Alert";
@@ -13,6 +13,26 @@ import Contact from "./components/Contact";
 
 function App() {
   const a = useContext(noteContext);
+  useEffect(() => {
+    window.onbeforeunload = function (e) {
+      window.localStorage.unloadTime = JSON.stringify(new Date());
+      };
+      window.onload = function () {
+      let loadTime = new Date();
+      let unloadTime = new Date(JSON.parse(window.localStorage.unloadTime));
+      let refreshTime = loadTime.getTime() - unloadTime.getTime();
+      
+      if(refreshTime>60*60*1000)
+      {
+      window.localStorage.removeItem("token");
+      }
+      
+      };
+    return () => {
+    
+    };
+  }, []);
+ 
   return (
     <>
       <Router>
