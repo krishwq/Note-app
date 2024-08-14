@@ -85,7 +85,7 @@ function Signup() {
         showalart("OTP Send Successfully", "success");
         setissend(true);
       } else {
-        showalart("Email not found", "danger");
+        showalart("Something went wrong please try again", "danger");
       }
       setloading(false);
     }
