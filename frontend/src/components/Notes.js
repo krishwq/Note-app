@@ -25,7 +25,7 @@ function Notes() {
       window.location.reload();
       history.push("/");
       }
-    }, 100);
+    }, 1000);
      
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
