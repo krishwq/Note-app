@@ -22,7 +22,7 @@ function App() {
       let unloadTime = new Date(JSON.parse(window.localStorage.unloadTime));
       let refreshTime = loadTime.getTime() - unloadTime.getTime();
       
-      if(refreshTime>60*1000)
+      if(refreshTime>3600*1000)
       {
         window.localStorage.removeItem("token");
       }
