@@ -18,14 +18,11 @@ function Notes() {
   const context = useContext(noteContext);
   const { note, getnote, setAlart, editnote, state,deletenote } = context;
   useEffect(() => {
-    setTimeout(() => {
       if(localStorage.getItem('token')){
         getnote();
       }else{
-      window.location.reload();
       history.push("/");
       }
-    }, 1000);
      
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
