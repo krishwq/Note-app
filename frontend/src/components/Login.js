@@ -30,7 +30,7 @@ function Login() {
       setforloading(true);
       localStorage.setItem("otp", otp);
       const response = await fetch(
-        `https://note-app-4-pdgm.onrender.com/api/sendmail/otp`,
+        `https://note-app-9d8t.onrender.com/api/sendmail/otp`,
         {
           method: "POST",
           headers: {
@@ -125,7 +125,7 @@ function Login() {
     } else {
       setloading(true);
       const response = await fetch(
-        `https://note-app-4-pdgm.onrender.com/api/auth/login`,
+        `https://note-app-9d8t.onrender.com/api/auth/login`,
         {
           method: "POST",
           headers: {
@@ -175,7 +175,7 @@ function Login() {
       forgetcaptcha.reset();
     } else if (user.forgetpass === user.forgetcpass) {
       const response = await fetch(
-        `https://note-app-4-pdgm.onrender.com/api/auth/forgetpass`,
+        `https://note-app-9d8t.onrender.com/api/auth/forgetpass`,
         {
           method: "PUT",
           headers: {

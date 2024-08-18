@@ -11,7 +11,7 @@ const NoteState = (props) => {
 
   //get  note
   const getnote = async () => {
-    const response = await fetch(`https://note-app-4-pdgm.onrender.com/api/notes/fetchallnotes`, {
+    const response = await fetch(`https://note-app-9d8t.onrender.com/api/notes/fetchallnotes`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -24,7 +24,7 @@ const NoteState = (props) => {
 
   //add a note
   const addnote = async (title, description, tag) => {
-    const response = await fetch(`https://note-app-4-pdgm.onrender.com/api/notes/addnote`, {
+    const response = await fetch(`https://note-app-9d8t.onrender.com/api/notes/addnote`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +37,7 @@ const NoteState = (props) => {
   };
   //delete a note
   const deletenote = async (id) => {
-    const response = await fetch(`https://note-app-4-pdgm.onrender.com/api/notes/deletenote/${id}`, {
+    const response = await fetch(`https://note-app-9d8t.onrender.com/api/notes/deletenote/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -53,7 +53,7 @@ const NoteState = (props) => {
   };
   //edit of note
   const editnote = async (id, title, description, tag) => {
-    const response = await fetch(`https://note-app-4-pdgm.onrender.com/api/notes/updatenote/${id}`, {
+    const response = await fetch(`https://note-app-9d8t.onrender.com/api/notes/updatenote/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

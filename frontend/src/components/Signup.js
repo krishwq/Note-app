@@ -67,7 +67,7 @@ function Signup() {
       setloading(true);
       localStorage.setItem("otp", otp);
       const response = await fetch(
-        `https://note-app-4-pdgm.onrender.com/api/sendmail/otp`,
+        `https://note-app-9d8t.onrender.com/api/sendmail/otp`,
         {
           method: "POST",
           headers: {
@@ -136,7 +136,7 @@ function Signup() {
      else if (credent.pass === credent.cpass) {
       setloading(true);
       const response = await fetch(
-        `https://note-app-4-pdgm.onrender.com/api/auth/createuser`,
+        `https://note-app-9d8t.onrender.com/api/auth/createuser`,
         {
           method: "POST",
           headers: {

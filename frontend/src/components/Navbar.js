@@ -101,7 +101,7 @@ const Navbar = () => {
   const handledetails = async () => {
     refdetails.current.click();
     const response = await fetch(
-      `https://note-app-4-pdgm.onrender.com/api/auth/getuser`,
+      `https://note-app-9d8t.onrender.com/api/auth/getuser`,
       {
         method: "POST",
         headers: {
@@ -142,7 +142,7 @@ const Navbar = () => {
     } 
     else if (user.forgetpass === user.forgetcpass) {
       const response = await fetch(
-        `https://note-app-4-pdgm.onrender.com/api/auth/changepass`,
+        `https://note-app-9d8t.onrender.com/api/auth/changepass`,
         {
           method: "PUT",
           headers: {
@@ -180,7 +180,7 @@ const Navbar = () => {
   };
   const handleaccountdelete = async () => {
     refaccountclose.current.click();
-    const response = await fetch(`https://note-app-4-pdgm.onrender.com/api/auth/deleteuser`, {
+    const response = await fetch(`https://note-app-9d8t.onrender.com/api/auth/deleteuser`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
