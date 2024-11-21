@@ -20,12 +20,17 @@ function Notes() {
   useEffect(() => {
       if(localStorage.getItem('token')){
         getnote();
+        window.history.pushState(null, document.title, window.location.href);
+        window.addEventListener('popstate', function (event){
+            window.history.pushState(null, document.title,  window.location.href);
+        });
       }else{
       history.push("/");
       }
      
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   const updatenote = (currentnote) => {
     ref.current.click();
     setnotes({

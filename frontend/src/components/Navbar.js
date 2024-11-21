@@ -351,7 +351,7 @@ const Navbar = () => {
               }}
             />
               </div>
-              <ReCAPTCHA ref={(r) => setforgetCaptchaRef(r) } sitekey="6LeItSMqAAAAAL73NtPX23w7lMrMCajqNk0CYDL2" onChange={onChangeresetpass} />
+              <ReCAPTCHA ref={(r) => setforgetCaptchaRef(r) }sitekey="6LdYToYqAAAAAIhpZlrFGJQubFWiGmaK1beMC1fF" onChange={onChangeresetpass} />
             </div>
             <div className="modal-footer">
               <button

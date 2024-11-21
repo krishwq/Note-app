@@ -383,7 +383,7 @@ function Login() {
                 </div>
                 <ReCAPTCHA
                   ref={(r) => setforCaptchaRef(r)}
-                  sitekey="6LeItSMqAAAAAL73NtPX23w7lMrMCajqNk0CYDL2"
+                 sitekey="6LdYToYqAAAAAIhpZlrFGJQubFWiGmaK1beMC1fF"
                   onChange={onChangereset}
                 />
                <button
