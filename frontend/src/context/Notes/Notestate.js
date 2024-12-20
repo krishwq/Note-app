@@ -52,14 +52,14 @@ const NoteState = (props) => {
     console.log(json);
   };
   //edit of note
-  const editnote = async (id, title, description, tag) => {
+  const editnote = async (id, title, description, tag,islike) => {
     const response = await fetch(`http://localhost:5000/api/notes/updatenote/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         authtoken:localStorage.getItem('token')
       },
-      body: JSON.stringify({ title, description, tag }),
+      body: JSON.stringify({ title, description, tag,islike }),
     });
     const json = await response.json();
     console.log(json);
@@ -70,6 +70,7 @@ const NoteState = (props) => {
         newnotes[index].title = title;
         newnotes[index].description = description;
         newnotes[index].tag = tag;
+        newnotes[index].islike = islike;
         break;
       }
     }

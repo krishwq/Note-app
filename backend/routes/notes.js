@@ -49,7 +49,7 @@ router.post(
 
 //3. update notes using put /api/notes/updatenote/:id
 router.put("/updatenote/:id", fetchuser, async (req, res) => {
-  const { title, description, tag } = req.body;
+  const { title, description, tag,islike } = req.body;
   try {
     const newnote = {};
     if (title) {
@@ -61,6 +61,7 @@ router.put("/updatenote/:id", fetchuser, async (req, res) => {
     if (tag) {
       newnote.tag = tag;
     }
+    newnote.islike = islike;
 
     //find the note to be updated
     let note = await Notes.findById(req.params.id);

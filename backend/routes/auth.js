@@ -8,7 +8,6 @@ var fetchuser = require("../middleware/fetchuser");
 const jwt_secret = "Krishnendu@987#123";
 
 // Route 1 :  to create a user using post /api/auth/createuser
-
 router.post(
   "/createuser",
   [

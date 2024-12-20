@@ -52,6 +52,24 @@ function Noteitem(props) {
                 }}
               ></i>
             </em>
+            <em title="Edit Note">
+              {note.islike ? (
+                <i
+                  className="fa-solid fa-heart mx-2"
+                  style={{ color: "#ff0000" }}
+                  onClick={() => {
+                    props.likenote(note);
+                  }}
+                ></i>
+              ) : (
+                <i
+                  className="fa-regular fa-heart mx-2"
+                  onClick={() => {
+                    props.likenote(note);
+                  }}
+                ></i>
+              )}
+            </em>
           </span>
         </div>
       </div>

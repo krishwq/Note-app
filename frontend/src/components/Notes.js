@@ -11,6 +11,7 @@ function Notes() {
     etitle: "",
     edescription: "",
     etag: "",
+    eislike:"",
   });
   const [deleten, setdeleten] = useState({
     delid:"",
@@ -30,7 +31,35 @@ function Notes() {
      
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  const likenote = async (currentnote) => {
+    let eislike="";
+  if(currentnote.islike){
+    eislike=false;
+  }else{
+    eislike=true;
+  }
+    const updatedNote = {
+      id: currentnote._id,
+      etitle: currentnote.title,
+      edescription: currentnote.description,
+      etag: currentnote.tag,
+      eislike: eislike,
+    };
+    setnotes(updatedNote);
+    editnote(
+      updatedNote.id,
+      updatedNote.etitle,
+      updatedNote.edescription,
+      updatedNote.etag,
+      updatedNote.eislike
+    );
+    if(eislike) {
+    showalart("Notes added to favourite successfully.", "success");
+    }else{
+    showalart("Notes romoved to favourite.", "warning");
+    }
+  };
+  
   const updatenote = (currentnote) => {
     ref.current.click();
     setnotes({
@@ -38,6 +67,7 @@ function Notes() {
       etitle: currentnote.title,
       edescription: currentnote.description,
       etag: currentnote.tag,
+      eislike: currentnote.islike,
     });
   };
   const deletenotes = (currentnote) => {
@@ -69,7 +99,7 @@ function Notes() {
       showalart("Please fill Atleast 5 character at Title and Description", "warning");
     }
      else {
-      editnote(notes.id, notes.etitle, notes.edescription, notes.etag);
+      editnote(notes.id, notes.etitle, notes.edescription, notes.etag,notes.eislike);
       refclose.current.click();
       showalart("Notes Updated Successfully", "success");
     }
@@ -246,6 +276,7 @@ function Notes() {
               <Noteitem
                 deletenote={deletenotes}
                 updatenote={updatenote}
+                likenote={likenote}
                 note={notes}
               />
             </div>

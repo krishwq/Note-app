@@ -18,7 +18,10 @@ const NotesSchema = new Schema({
     type: String,
     required:true
   },
- 
+  islike:{
+    type:Boolean,
+    default:false
+  },
   date:{
     type:Date,
     default:Date.now
