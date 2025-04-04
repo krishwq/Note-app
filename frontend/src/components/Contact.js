@@ -2,7 +2,7 @@ import React,{useContext} from "react";
 import noteContext from "../context/Notes/noteContext";
 
 
-function Contact() {
+function Contact(props) {
     const context = useContext(noteContext);
     const {state, setAlart } = context;
     const showalart=(massage,type)=>{

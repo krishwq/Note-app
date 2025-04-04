@@ -1,5 +1,6 @@
 import React from "react";
 
+
 export default function Alart(props) {
   const font = (word) => {
     const lower = word.toLowerCase();
