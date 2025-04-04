@@ -101,7 +101,7 @@ const Navbar = () => {
   const handledetails = async () => {
     refdetails.current.click();
     const response = await fetch(
-      `http://localhost:5000/api/auth/getuser`,
+      `https://note-app-fr2v.onrender.com/api/auth/getuser`,
       {
         method: "POST",
         headers: {
@@ -142,7 +142,7 @@ const Navbar = () => {
     } 
     else if (user.forgetpass === user.forgetcpass) {
       const response = await fetch(
-        `http://localhost:5000/api/auth/changepass`,
+        `https://note-app-fr2v.onrender.com/api/auth/changepass`,
         {
           method: "PUT",
           headers: {
@@ -180,7 +180,7 @@ const Navbar = () => {
   };
   const handleaccountdelete = async () => {
     refaccountclose.current.click();
-    const response = await fetch(`http://localhost:5000/api/auth/deleteuser`, {
+    const response = await fetch(`https://note-app-fr2v.onrender.com/api/auth/deleteuser`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

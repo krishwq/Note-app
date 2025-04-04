@@ -30,7 +30,7 @@ function Login() {
       setforloading(true);
       localStorage.setItem("otp", otp);
       const response = await fetch(
-        `http://localhost:5000/api/sendmail/otp`,
+        `https://note-app-fr2v.onrender.com/api/sendmail/otp`,
         {
           method: "POST",
           headers: {
@@ -125,7 +125,7 @@ function Login() {
     } else {
       setloading(true);
       const response = await fetch(
-        `http://localhost:5000/api/auth/login`,
+        `https://note-app-fr2v.onrender.com/api/auth/login`,
         {
           method: "POST",
           headers: {
@@ -175,7 +175,7 @@ function Login() {
       forgetcaptcha.reset();
     } else if (user.forgetpass === user.forgetcpass) {
       const response = await fetch(
-        `http://localhost:5000/api/auth/forgetpass`,
+        `https://note-app-fr2v.onrender.com/api/auth/forgetpass`,
         {
           method: "PUT",
           headers: {
